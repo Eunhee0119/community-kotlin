@@ -32,12 +32,13 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
-	implementation("io.jsonwebtoken:jjwt-api:0.11.2")
+	implementation("org.springframework.boot:spring-boot-starter-security:3.1.3")
+	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
 
 	implementation("org.springframework.boot:spring-boot-starter-validation:3.1.3")
 
-	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2")
-	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2")
+	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
+	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
 
 	compileOnly("org.projectlombok:lombok")
 

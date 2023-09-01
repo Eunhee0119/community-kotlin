@@ -31,7 +31,7 @@ object MemberSteps {
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(param)
-            .`when`().post("/members")
+            .`when`().post("/auth/signUp")
             .then().log().all().extract()
     }
 }

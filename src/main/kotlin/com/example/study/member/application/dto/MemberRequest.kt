@@ -30,7 +30,7 @@ data class MemberRequest(
     private val _name: String?,
 
     @field : NotNull
-    @Digits(fraction = 0, integer = 10, message ="연령을 확인해주세요.")
+    @Digits(fraction = 0, integer = 10, message = "연령을 확인해주세요.")
     @JsonProperty("age")
     private val _age: Int?,
 
@@ -67,10 +67,10 @@ data class MemberRequest(
     val role: RoleType
         get() = RoleType.valueOf(_role!!)
 
-    private fun String.toLocalDate() : LocalDate =
+    private fun String.toLocalDate(): LocalDate =
         LocalDate.parse(this, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
-    fun toMember(): Member {
-        return Member(id, email, password, name, age, birthDate, gender, role)
-    }
+    fun toMember(encodePassword: String): Member =
+        Member(id, email, encodePassword, name, age, birthDate, gender, role)
+
 }
