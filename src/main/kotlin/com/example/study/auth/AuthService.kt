@@ -8,6 +8,8 @@ import com.example.study.member.application.dto.MemberResponse
 import com.example.study.member.domain.Member
 import com.example.study.member.repository.MemberRepository
 import jakarta.transaction.Transactional
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -15,14 +17,19 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import java.util.concurrent.TimeUnit
 
 @Service
 class AuthService(
     private val memberRepository: MemberRepository,
     private val bCryptPasswordEncoder: PasswordEncoder,
     private val jwtTokenProvider: JwtTokenProvider,
-    private val authenticationManager: AuthenticationManager
+    private val authenticationManager: AuthenticationManager,
+    private val redisTemplate : RedisTemplate<String, String>
 ) {
+
+    @Value("\${security.jwt.token.refresh-expire-length}")
+    private lateinit var refreshExpireTime: Number
 
     @Transactional
     @Throws(Exception::class)
@@ -46,9 +53,20 @@ class AuthService(
                     tokenRequest.password
                 )
             )
-            val tokenDto = TokenDto(jwtTokenProvider.generateToken(authentication)!!)
+
+            val accessToken =jwtTokenProvider.generateToken(authentication)!!
+            val refreshToken = jwtTokenProvider.generateRefreshToken(authentication)!!
+            val tokenDto = TokenDto(accessToken,refreshToken)
+
+            redisTemplate.opsForValue().set(
+                authentication.name,
+                refreshToken,
+                refreshExpireTime.toLong(),
+                TimeUnit.MILLISECONDS
+            )
+
             val httpHeaders = HttpHeaders()
-            httpHeaders.add("Authorization", "Bearer " + tokenDto.access_token)
+            httpHeaders.add("Authorization", "Bearer " + tokenDto.accessToken)
             ResponseEntity(tokenDto, httpHeaders, HttpStatus.OK)
         } catch (e: AuthenticationException) {
             throw AuthenticationException("유효하지 않은 회원 정보 입니다.")

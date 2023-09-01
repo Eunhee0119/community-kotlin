@@ -36,7 +36,7 @@ class AuthController(
         val tokenDtoResponseEntity: ResponseEntity<TokenDto?> = authService.signIn(request)
         val cookie = Cookie(
             "access_token",
-            tokenDtoResponseEntity.body!!.access_token
+            tokenDtoResponseEntity.body!!.accessToken
         )
         cookie.path = "/"
         cookie.maxAge = Int.MAX_VALUE
