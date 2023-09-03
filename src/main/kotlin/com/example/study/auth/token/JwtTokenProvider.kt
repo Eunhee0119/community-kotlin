@@ -32,7 +32,7 @@ class JwtTokenProvider (
 
     private val key by lazy{ Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey))}
 
-    fun generateToken(authentication: Authentication): String? {
+    fun generateToken(authentication: Authentication): String {
         return getToken(authentication,accessExpireTime.toLong())
     }
 
@@ -69,7 +69,7 @@ class JwtTokenProvider (
         }
     }
 
-    private fun getToken(authentication: Authentication, expireTime: Long): String? {
+    private fun getToken(authentication: Authentication, expireTime: Long): String {
         val claims = Jwts.claims().setSubject(authentication.name)
         val now = Date()
         val expiresIn = Date(now.time + expireTime)
