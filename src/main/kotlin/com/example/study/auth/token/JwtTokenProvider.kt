@@ -22,23 +22,22 @@ class JwtTokenProvider (
 
 
     @Value("\${security.jwt.secret-key}")
-    lateinit var secretKey: String
+    private lateinit var secretKey: String
 
-    @Value("\${security.jwt.expire-length}")
-    lateinit var validityInMilliseconds : Number
+    @Value("\${security.jwt.token.expire-length}")
+    private lateinit var accessExpireTime : Number
+
+    @Value("\${security.jwt.token.refresh-expire-length}")
+    private lateinit var refreshExpireTime: Number
 
     private val key by lazy{ Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey))}
 
-    fun generateToken(authentication: Authentication): String? {
-        val claims = Jwts.claims().setSubject(authentication.name)
-        val now = Date()
-        val expiresIn = Date(now.time + validityInMilliseconds.toLong())
-        return Jwts.builder()
-            .setClaims(claims)
-            .setIssuedAt(now)
-            .setExpiration(expiresIn)
-            .signWith(SignatureAlgorithm.HS256, secretKey)
-            .compact()
+    fun generateToken(authentication: Authentication): String {
+        return getToken(authentication,accessExpireTime.toLong())
+    }
+
+    fun generateRefreshToken(authentication: Authentication): String? {
+        return getToken(authentication,refreshExpireTime.toLong())
     }
 
     fun resolveToken(req: HttpServletRequest): String? {
@@ -68,5 +67,17 @@ class JwtTokenProvider (
         } catch (e: IllegalArgumentException) {
             false
         }
+    }
+
+    private fun getToken(authentication: Authentication, expireTime: Long): String {
+        val claims = Jwts.claims().setSubject(authentication.name)
+        val now = Date()
+        val expiresIn = Date(now.time + expireTime)
+        return Jwts.builder()
+            .setClaims(claims)
+            .setIssuedAt(now)
+            .setExpiration(expiresIn)
+            .signWith(SignatureAlgorithm.HS256, secretKey)
+            .compact()
     }
 }

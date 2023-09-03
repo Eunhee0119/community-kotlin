@@ -15,13 +15,13 @@ object MemberSteps {
 
     fun 회원_요청_정보(email: String, password: String, name: String): Map<String, Any> {
         return mapOf(
-            "email" to email
-            ,"password" to password
-            ,"name" to name
-            ,"age" to AGE
-            , "birthDate" to BIRTH_DATE
-            , "gender" to GENDER
-            , "role" to ROLE_TYPE
+                "email" to email
+                ,"password" to password
+                ,"name" to name
+                ,"age" to AGE
+                , "birthDate" to BIRTH_DATE
+                , "gender" to GENDER
+                , "role" to ROLE_TYPE
         )
     }
 
@@ -32,6 +32,32 @@ object MemberSteps {
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(param)
             .`when`().post("/auth/signUp")
+            .then().log().all().extract()
+    }
+
+    fun 로그인(email: String, password: String): ExtractableResponse<Response?> {
+        val param = mapOf(
+            "email" to email
+            ,"password" to password
+        )
+        return RestAssured
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(param)
+            .`when`().post("/auth/signIn")
+            .then().log().all().extract()
+    }
+
+    fun 토큰_재발급(refreshToken: String): ExtractableResponse<Response?>  {
+        val param = mapOf(
+            "refreshToken" to refreshToken
+        )
+        return RestAssured
+            .given().log().all()
+            .header("Authorization", "Bearer "+ refreshToken)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(param)
+            .`when`().post("/auth/regenerateToken")
             .then().log().all().extract()
     }
 }
