@@ -16,28 +16,28 @@ import java.util.*
 
 
 @Component
-class JwtTokenProvider (
-    private val userDetailsService : UserDetailsService
-        ){
+class JwtTokenProvider(
+    private val userDetailsService: UserDetailsService
+) {
 
 
     @Value("\${security.jwt.secret-key}")
     private lateinit var secretKey: String
 
     @Value("\${security.jwt.token.expire-length}")
-    private lateinit var accessExpireTime : Number
+    private lateinit var accessExpireTime: Number
 
     @Value("\${security.jwt.token.refresh-expire-length}")
     private lateinit var refreshExpireTime: Number
 
-    private val key by lazy{ Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey))}
+    private val key by lazy { Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey)) }
 
     fun generateToken(authentication: Authentication): String {
-        return getToken(authentication,accessExpireTime.toLong())
+        return getToken(authentication, accessExpireTime.toLong())
     }
 
     fun generateRefreshToken(authentication: Authentication): String? {
-        return getToken(authentication,refreshExpireTime.toLong())
+        return getToken(authentication, refreshExpireTime.toLong())
     }
 
     fun resolveToken(req: HttpServletRequest): String? {

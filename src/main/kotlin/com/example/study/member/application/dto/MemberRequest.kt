@@ -47,10 +47,6 @@ data class MemberRequest(
     @JsonProperty("gender")
     private val _gender: String?,
 
-    @field : NotBlank
-    @field:ValidEnum(enumClass = RoleType::class, message = "권한을 선택해주세요.")
-    @JsonProperty("role")
-    private val _role: String?
 ) {
     val email: String
         get() = _email!!
@@ -64,13 +60,11 @@ data class MemberRequest(
         get() = _birthDate!!.toLocalDate()
     val gender: Gender
         get() = Gender.valueOf(_gender!!)
-    val role: RoleType
-        get() = RoleType.valueOf(_role!!)
 
     private fun String.toLocalDate(): LocalDate =
         LocalDate.parse(this, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
     fun toMember(encodePassword: String): Member =
-        Member(id, email, encodePassword, name, age, birthDate, gender, role)
+        Member(id, email, encodePassword, name, age, birthDate, gender)
 
 }

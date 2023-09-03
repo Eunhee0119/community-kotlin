@@ -48,8 +48,8 @@ class SecurityConfig(
             .httpBasic { httpBasic -> httpBasic.disable() }
             .authorizeHttpRequests { authorizeHttpRequests ->
                 authorizeHttpRequests
-                    .requestMatchers("/index", "/auth/signUp", "/auth/signIn").permitAll() // Allow public access
-                    .requestMatchers("/*", "/*/*").authenticated() // Require authentication for this endpoint
+                    .requestMatchers("/index", "/auth/signup", "/auth/signin").permitAll() // Allow public access
+                    .anyRequest().authenticated() // Require authentication for this endpoint
             }
             .exceptionHandling { exceptionHandling ->
                 exceptionHandling

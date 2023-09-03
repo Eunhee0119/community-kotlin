@@ -21,7 +21,6 @@ object MemberSteps {
                 ,"age" to AGE
                 , "birthDate" to BIRTH_DATE
                 , "gender" to GENDER
-                , "role" to ROLE_TYPE
         )
     }
 
@@ -31,7 +30,7 @@ object MemberSteps {
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(param)
-            .`when`().post("/auth/signUp")
+            .`when`().post("/auth/signup")
             .then().log().all().extract()
     }
 
@@ -44,7 +43,7 @@ object MemberSteps {
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(param)
-            .`when`().post("/auth/signIn")
+            .`when`().post("/auth/signin")
             .then().log().all().extract()
     }
 
@@ -57,7 +56,7 @@ object MemberSteps {
             .header("Authorization", "Bearer "+ refreshToken)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(param)
-            .`when`().post("/auth/regenerateToken")
+            .`when`().post("/auth/regeneratetoken")
             .then().log().all().extract()
     }
 }

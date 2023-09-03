@@ -13,7 +13,6 @@ class MemberResponse(
     val age: Int?,
     val birthDate: LocalDate?,
     val gender: Gender?,
-    val role: RoleType?
 ) {
     companion object {
         fun of(member: Member): MemberResponse {
@@ -24,8 +23,7 @@ class MemberResponse(
                 member.name,
                 member.age,
                 member.birthDate,
-                member.gender,
-                member.role
+                member.gender
             )
         }
     }
