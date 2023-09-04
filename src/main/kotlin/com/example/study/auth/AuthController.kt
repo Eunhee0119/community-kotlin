@@ -29,7 +29,7 @@ class AuthController(
     @Throws(Exception::class)
     fun signUp(@RequestBody @Valid request: MemberRequest): ResponseEntity<MemberResponse?>? {
         val member: MemberResponse = authService.signUp(request)
-        return ResponseEntity.created(URI.create("/signUp/" + member.id)).build()
+        return ResponseEntity.created(URI.create("/signUp/" + member.id)).body(member)
     }
 
     @PostMapping("/signin")

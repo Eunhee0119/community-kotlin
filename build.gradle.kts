@@ -45,13 +45,10 @@ dependencies {
 
 	runtimeOnly("com.h2database:h2")
 
-	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
-
-
-	// https://mvnrepository.com/artifact/io.rest-assured/rest-assured
+	testImplementation("org.springframework.security:spring-security-test:6.1.3")
 	testImplementation("io.rest-assured:rest-assured:5.3.1")
-
+	testImplementation("org.mockito:mockito-core:5.5.0")
 }
 
 allOpen{

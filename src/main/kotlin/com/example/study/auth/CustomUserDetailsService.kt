@@ -1,5 +1,6 @@
 package com.example.study.auth
 
+import com.example.study.common.dto.CustomUser
 import com.example.study.member.domain.Member
 import com.example.study.member.exception.NotFoundMemberException
 import com.example.study.member.repository.MemberRepository
@@ -20,7 +21,11 @@ class CustomUserDetailsService(
     @Throws(NotFoundMemberException::class)
     override fun loadUserByUsername(email: String): UserDetails {
         val member: Member = memberRepository.findByEmail(email) ?: throw NotFoundMemberException()
-        return User(member.email, member.password, member.role?.map { SimpleGrantedAuthority("ROLE_${it.roleType}") })
+        return CustomUser(
+            member.id!!,
+            member.email,
+            member.password,
+            member.role!!.map { SimpleGrantedAuthority("ROLE_${it.roleType}") })
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.study.config
 
+import com.example.study.auth.token.JwtTokenFilter
 import com.example.study.auth.token.JwtTokenProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 
 @Configuration
@@ -49,6 +51,7 @@ class SecurityConfig(
             .authorizeHttpRequests { authorizeHttpRequests ->
                 authorizeHttpRequests
                     .requestMatchers("/index", "/auth/signup", "/auth/signin").permitAll() // Allow public access
+                    .requestMatchers("/members/*").hasRole("MEMBER")
                     .anyRequest().authenticated() // Require authentication for this endpoint
             }
             .exceptionHandling { exceptionHandling ->
@@ -56,7 +59,11 @@ class SecurityConfig(
                     .accessDeniedHandler(jwtAccessDeniedHandler)
                     .authenticationEntryPoint(jwtAuthenticationEntryPoint)
             }
-            .apply(JwtSecurityConfig(jwtTokenProvider));
+            .addFilterBefore(
+                JwtTokenFilter(jwtTokenProvider),
+                UsernamePasswordAuthenticationFilter::class.java
+            )
+//            .apply(JwtSecurityConfig(jwtTokenProvider));
 
         return http.build()
     }

@@ -10,10 +10,10 @@ class Member(
     var id: Long? = null,
 
     @Column(unique = true, nullable = false, updatable = false)
-    var email: String? = null,
+    var email: String,
 
     @Column(nullable = false, length = 100)
-    var password: String? = null,
+    var password: String,
 
     @Column(nullable = false, length = 10)
     var name: String? = null,
