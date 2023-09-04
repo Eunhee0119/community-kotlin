@@ -3,8 +3,11 @@ package com.example.study.member
 import com.example.study.auth.token.dto.TokenDto
 import com.example.study.member.MemberSteps.로그인_토큰
 import com.example.study.member.MemberSteps.회원_생성_요청_반환
+import com.example.study.member.MemberSteps.회원_요청_정보
+import com.example.study.member.MemberSteps.회원_정보_수정
 import com.example.study.member.MemberSteps.회원_정보_조회
 import com.example.study.member.application.dto.MemberResponse
+import com.example.study.member.domain.Gender
 import com.example.study.util.AcceptanceTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -33,25 +36,47 @@ class MemberAcceptanceTest : AcceptanceTest() {
     @Test
     fun getMemberInfo() {
         // when
-        val response = 회원_정보_조회(ACCESS_TOKEN, 회원!!.id!!)
+        val response = 회원_정보_조회(ACCESS_TOKEN)
 
         // then
         assertThat(response!!.statusCode()).isEqualTo(HttpStatus.OK.value())
         assertThat(response!!.`as`(MemberResponse::class.java).email).isEqualTo(EMAIL)
     }
 
-    @DisplayName("회원 정보를 조회 실패한다. - 다른 회원 정보의 경우")
+    @DisplayName("회원 정보를 조회 실패한다. - 토큰 유효성 검사에 실패한 경우")
     @Test
-    fun getMemberInfoWhenOtherMember() {
-        //given
-        val 회원2 = 회원_생성_요청_반환("temp@email.com", PASSWORD, NAME)
+    fun getMemberInfoWhenInvalidToken() {
+        // when
+        val response = 회원_정보_조회("invalid_$ACCESS_TOKEN")
+
+        // then
+        assertThat(response!!.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value())
+    }
+
+    @DisplayName("회원 정보를 수정한다.")
+    @Test
+    fun putMemberInfo() {
+        val gender = Gender.WOMAN
+        val expected: MemberResponse =
+            MemberResponse(회원!!.id, EMAIL, "${PASSWORD}22", 회원!!.name!!, 30, "1990-01-02", gender.desc)
+        val 회원_정보 = 회원_요청_정보(
+            expected.email!!,
+            expected.password!!,
+            expected.name!!,
+            expected.age!!,
+            expected.birthDate!!,
+            gender.name!!
+        )
 
         // when
-        val response = 회원_정보_조회(ACCESS_TOKEN, 회원2!!.id!!)
+        val response = 회원_정보_수정(ACCESS_TOKEN, 회원_정보)
 
         // then
         assertThat(response!!.statusCode()).isEqualTo(HttpStatus.OK.value())
-        assertThat(response!!.`as`(MemberResponse::class.java).email).isEqualTo(EMAIL)
+
+        val member = response.`as`(MemberResponse::class.java)
+        assertThat(member.age).isEqualTo(expected.age)
+        assertThat(member.birthDate).isEqualTo(expected.birthDate)
     }
 }
 

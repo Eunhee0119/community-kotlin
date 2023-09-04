@@ -50,20 +50,16 @@ class SecurityConfig(
             .httpBasic { httpBasic -> httpBasic.disable() }
             .authorizeHttpRequests { authorizeHttpRequests ->
                 authorizeHttpRequests
-                    .requestMatchers("/index", "/auth/signup", "/auth/signin").permitAll() // Allow public access
-                    .requestMatchers("/members/*").hasRole("MEMBER")
-                    .anyRequest().authenticated() // Require authentication for this endpoint
+                    .requestMatchers("/index", "/auth/signup", "/auth/signin").anonymous() // Allow public access
+                    .requestMatchers("/members/info").hasRole("MEMBER")
+                    .anyRequest().permitAll() // Require authentication for this endpoint
             }
             .exceptionHandling { exceptionHandling ->
                 exceptionHandling
                     .accessDeniedHandler(jwtAccessDeniedHandler)
                     .authenticationEntryPoint(jwtAuthenticationEntryPoint)
             }
-            .addFilterBefore(
-                JwtTokenFilter(jwtTokenProvider),
-                UsernamePasswordAuthenticationFilter::class.java
-            )
-//            .apply(JwtSecurityConfig(jwtTokenProvider));
+            .apply(JwtSecurityConfig(jwtTokenProvider));
 
         return http.build()
     }

@@ -10,7 +10,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 data class MemberRequest(
-    val id: Long?,
+    var id: Long?,
 
     @field : NotBlank
     @field:Email

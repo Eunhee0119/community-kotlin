@@ -14,13 +14,19 @@ object MemberSteps {
     val GENDER = "MAN"
 
     fun 회원_요청_정보(email: String, password: String, name: String): Map<String, Any> {
+        return 회원_요청_정보(email, password, name, AGE, BIRTH_DATE, GENDER)
+    }
+
+    fun 회원_요청_정보(
+        email: String, password: String, name: String, age: Int, birthDate: String, gender: String
+    ): Map<String, Any> {
         return mapOf(
             "email" to email,
             "password" to password,
             "name" to name,
-            "age" to AGE,
-            "birthDate" to BIRTH_DATE,
-            "gender" to GENDER
+            "age" to age,
+            "birthDate" to birthDate,
+            "gender" to gender
         )
     }
 
@@ -69,12 +75,21 @@ object MemberSteps {
             .then().log().all().extract()
     }
 
-    fun 회원_정보_조회(TOKEN: String?, id: Long): ExtractableResponse<Response?> {
+    fun 회원_정보_조회(TOKEN: String?): ExtractableResponse<Response?> {
+        return RestAssured
+            .given().log().all()
+            .header("Authorization", "Bearer $TOKEN")
+            .`when`().get("/members/info")
+            .then().log().all().extract()
+    }
+
+    fun 회원_정보_수정(TOKEN: String?, params: Map<String, Any>): ExtractableResponse<Response?> {
         return RestAssured
             .given().log().all()
             .header("Authorization", "Bearer $TOKEN")
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .`when`().get("/members/info")
+            .body(params)
+            .`when`().put("/members/info")
             .then().log().all().extract()
     }
 }
