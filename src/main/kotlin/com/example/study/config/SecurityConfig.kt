@@ -1,5 +1,6 @@
 package com.example.study.config
 
+import com.example.study.auth.token.JwtTokenFilter
 import com.example.study.auth.token.JwtTokenProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 
 @Configuration
@@ -48,8 +50,9 @@ class SecurityConfig(
             .httpBasic { httpBasic -> httpBasic.disable() }
             .authorizeHttpRequests { authorizeHttpRequests ->
                 authorizeHttpRequests
-                    .requestMatchers("/index", "/auth/signUp", "/auth/signIn").permitAll() // Allow public access
-                    .requestMatchers("/*", "/*/*").authenticated() // Require authentication for this endpoint
+                    .requestMatchers("/index", "/auth/signup", "/auth/signin").anonymous() // Allow public access
+                    .requestMatchers("/members/info").hasRole("MEMBER")
+                    .anyRequest().permitAll() // Require authentication for this endpoint
             }
             .exceptionHandling { exceptionHandling ->
                 exceptionHandling

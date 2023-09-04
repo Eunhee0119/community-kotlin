@@ -25,14 +25,14 @@ class AuthController(
     private val authService: AuthService
 ) {
 
-    @PostMapping("/signUp")
+    @PostMapping("/signup")
     @Throws(Exception::class)
     fun signUp(@RequestBody @Valid request: MemberRequest): ResponseEntity<MemberResponse?>? {
         val member: MemberResponse = authService.signUp(request)
-        return ResponseEntity.created(URI.create("/signUp/" + member.id)).build()
+        return ResponseEntity.created(URI.create("/signUp/" + member.id)).body(member)
     }
 
-    @PostMapping("/signIn")
+    @PostMapping("/signin")
     fun signIn(@RequestBody request: TokenRequest, res: HttpServletResponse): ResponseEntity<TokenDto?> {
         val tokenDto: TokenDto = authService.signIn(request)
         val cookie = Cookie(
@@ -45,10 +45,10 @@ class AuthController(
 
         val httpHeaders = HttpHeaders()
         httpHeaders.add("Authorization", "Bearer " + tokenDto.accessToken)
-        return  ResponseEntity.ok().headers(httpHeaders).body(tokenDto)
+        return ResponseEntity.ok().headers(httpHeaders).body(tokenDto)
     }
 
-    @PostMapping("/regenerateToken")
+    @PostMapping("/regeneratetoken")
     fun regenerateToken(@RequestBody refreshTokenDto: RefreshTokenDto): ResponseEntity<TokenDto?>? {
         return ResponseEntity.ok().body(authService.regenerateToken(refreshTokenDto))
     }

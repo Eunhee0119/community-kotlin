@@ -1,25 +1,31 @@
 package com.example.study.auth
 
+import com.example.study.common.dto.CustomUser
 import com.example.study.member.domain.Member
 import com.example.study.member.exception.NotFoundMemberException
 import com.example.study.member.repository.MemberRepository
-import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.userdetails.User
+import jakarta.transaction.Transactional
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
 
 
 @Service
-class UserDetailsServiceImpl(
+class CustomUserDetailsService(
     private val memberRepository: MemberRepository
 ) : UserDetailsService {
 
+    @Transactional
     @Throws(NotFoundMemberException::class)
     override fun loadUserByUsername(email: String): UserDetails {
-        println("email in loadUserByUsername = $email")
         val member: Member = memberRepository.findByEmail(email) ?: throw NotFoundMemberException()
-        val grantedAuthorities: Set<GrantedAuthority> = HashSet()
-        return User(member.email, member.password, grantedAuthorities)
+        return CustomUser(
+            member.id!!,
+            member.email,
+            member.password,
+            member.role!!.map { SimpleGrantedAuthority("ROLE_${it.roleType}") })
     }
+
 }
+
