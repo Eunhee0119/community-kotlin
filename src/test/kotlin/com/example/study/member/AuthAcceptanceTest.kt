@@ -15,13 +15,14 @@ import org.springframework.http.HttpStatus
 class AuthAcceptanceTest : AcceptanceTest() {
     val EMAIL = "test@email.com"
     val PASSWORD = "password11@@"
+    val NICKNAME = "테스트계정"
     val NAME = "test"
 
     @DisplayName("회원가입을 한다.")
     @Test
     fun signUp() {
         // when
-        val response: ExtractableResponse<Response?>? = 회원_생성_요청(EMAIL, PASSWORD, NAME)
+        val response: ExtractableResponse<Response?>? = 회원_생성_요청(EMAIL, PASSWORD, NICKNAME, NAME)
 
         // then
         assertThat(response!!.statusCode()).isEqualTo(HttpStatus.CREATED.value())
@@ -30,10 +31,10 @@ class AuthAcceptanceTest : AcceptanceTest() {
     @DisplayName("회원가입에 실패한다. - 이미 등록된 이메일일 경우")
     @Test
     fun signUpExceptionWhenDuplicatedEmail() {
-        회원_생성_요청(EMAIL, PASSWORD, NAME)
+        회원_생성_요청(EMAIL, PASSWORD, NICKNAME, NAME)
 
         // when
-        val response: ExtractableResponse<Response?>? = 회원_생성_요청(EMAIL, PASSWORD, NAME)
+        val response: ExtractableResponse<Response?>? = 회원_생성_요청(EMAIL, PASSWORD, NICKNAME, NAME)
 
         // then
         assertThat(response!!.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
@@ -43,7 +44,7 @@ class AuthAcceptanceTest : AcceptanceTest() {
     @Test
     fun signUpExceptionWhenInvalidEmail() {
         // when
-        val response: ExtractableResponse<Response?>? = 회원_생성_요청("test", PASSWORD, NAME)
+        val response: ExtractableResponse<Response?>? = 회원_생성_요청("test", PASSWORD, NICKNAME, NAME)
 
         // then
         assertThat(response!!.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
@@ -53,7 +54,7 @@ class AuthAcceptanceTest : AcceptanceTest() {
     @DisplayName("로그인을 한다.")
     @Test
     fun signIn() {
-        회원_생성_요청(EMAIL, PASSWORD, NAME)
+        회원_생성_요청(EMAIL, PASSWORD, NICKNAME, NAME)
 
         // when
         val response: ExtractableResponse<Response?> = 로그인(EMAIL, PASSWORD)
@@ -80,7 +81,7 @@ class AuthAcceptanceTest : AcceptanceTest() {
     @DisplayName("토큰 재발급을 한다.")
     @Test
     fun regenerateToken() {
-        회원_생성_요청(EMAIL, PASSWORD, NAME)
+        회원_생성_요청(EMAIL, PASSWORD, NICKNAME, NAME)
         val tokenDto = 로그인(EMAIL, PASSWORD).`as`(TokenDto::class.java)
         Thread.sleep(1000)
 

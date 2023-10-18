@@ -13,16 +13,17 @@ object MemberSteps {
     val BIRTH_DATE = "1990-01-01"
     val GENDER = "MAN"
 
-    fun 회원_요청_정보(email: String, password: String, name: String): Map<String, Any> {
-        return 회원_요청_정보(email, password, name, AGE, BIRTH_DATE, GENDER)
+    fun 회원_요청_정보(email: String, password: String, nickname: String, name: String): Map<String, Any> {
+        return 회원_요청_정보(email, password, nickname, name, AGE, BIRTH_DATE, GENDER)
     }
 
     fun 회원_요청_정보(
-        email: String, password: String, name: String, age: Int, birthDate: String, gender: String
+        email: String, password: String, nickname: String, name: String, age: Int, birthDate: String, gender: String
     ): Map<String, Any> {
         return mapOf(
             "email" to email,
             "password" to password,
+            "nickname" to nickname,
             "name" to name,
             "age" to age,
             "birthDate" to birthDate,
@@ -30,8 +31,8 @@ object MemberSteps {
         )
     }
 
-    fun 회원_생성_요청(email: String, password: String, name: String): ExtractableResponse<Response?> {
-        val param = 회원_요청_정보(email, password, name)!!
+    fun 회원_생성_요청(email: String, password: String, nickname: String, name: String): ExtractableResponse<Response?> {
+        val param = 회원_요청_정보(email, password, nickname, name)!!
         return RestAssured
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -40,8 +41,8 @@ object MemberSteps {
             .then().log().all().extract()
     }
 
-    fun 회원_생성_요청_반환(email: String, password: String, name: String): MemberResponse? {
-        return 회원_생성_요청(email, password, name)
+    fun 회원_생성_요청_반환(email: String, password: String, nickname: String, name: String): MemberResponse? {
+        return 회원_생성_요청(email, password, nickname, name)
             .`as`(MemberResponse::class.java)
     }
 

@@ -1,4 +1,4 @@
-package com.example.study.config
+package com.example.study.common.config
 
 import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest

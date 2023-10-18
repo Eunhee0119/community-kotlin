@@ -2,6 +2,7 @@ package com.example.study.member.application
 
 import com.example.study.member.application.dto.MemberRequest
 import com.example.study.member.application.dto.MemberResponse
+import com.example.study.member.domain.Member
 import com.example.study.member.exception.NotFoundMemberException
 import com.example.study.member.repository.MemberRepository
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -12,7 +13,12 @@ class MemberService(
     private val memberRepository: MemberRepository,
     private val bCryptPasswordEncoder: PasswordEncoder
 ) {
-    fun findMember(id: Long): MemberResponse {
+
+    fun findMember(id: Long): Member? {
+        return memberRepository.findById(id).orElseThrow { NotFoundMemberException() }
+    }
+
+    fun findMemberResponse(id: Long): MemberResponse {
         val member = memberRepository.findById(id).orElseThrow { NotFoundMemberException() }
         return MemberResponse.of(member!!)
     }

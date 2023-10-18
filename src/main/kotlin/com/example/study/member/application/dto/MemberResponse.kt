@@ -10,6 +10,7 @@ class MemberResponse(
     val id: Long?,
     val email: String?,
     val password: String?,
+    val nickname: String?,
     val name: String?,
     val age: Int?,
     val birthDate: String?,
@@ -20,15 +21,16 @@ class MemberResponse(
         private fun LocalDate.toFarmatDate(): String =
             this.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
-        fun of(member: Member): MemberResponse {
+        fun of(member: Member?): MemberResponse {
             return MemberResponse(
-                member.id,
-                member.email,
-                member.password,
-                member.name,
-                member.age,
-                member.birthDate?.toFarmatDate(),
-                member.gender?.desc
+                member?.id,
+                member?.email,
+                member?.password,
+                member?.nickname,
+                member?.name,
+                member?.age,
+                member?.birthDate?.toFarmatDate(),
+                member?.gender?.desc
             )
         }
     }

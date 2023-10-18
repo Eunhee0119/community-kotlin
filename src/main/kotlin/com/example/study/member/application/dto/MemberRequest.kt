@@ -26,6 +26,10 @@ data class MemberRequest(
     private val _password: String?,
 
     @field : NotBlank
+    @JsonProperty("nickname")
+    private val _nickname: String?,
+
+    @field : NotBlank
     @JsonProperty("name")
     private val _name: String?,
 
@@ -52,6 +56,8 @@ data class MemberRequest(
         get() = _email!!
     val password: String
         get() = _password!!
+    val nickname: String
+        get() = _nickname!!
     val name: String
         get() = _name!!
     val age: Int
@@ -65,6 +71,6 @@ data class MemberRequest(
         LocalDate.parse(this, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
     fun toMember(encodePassword: String): Member =
-        Member(id, email, encodePassword, name, age, birthDate, gender)
+        Member(id, email, encodePassword, nickname, name, age, birthDate, gender)
 
 }

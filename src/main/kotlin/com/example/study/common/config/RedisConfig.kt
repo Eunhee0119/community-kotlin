@@ -1,4 +1,4 @@
-package com.example.study.config
+package com.example.study.common.config
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean

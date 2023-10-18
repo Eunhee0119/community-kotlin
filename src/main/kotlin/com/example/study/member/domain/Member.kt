@@ -1,5 +1,6 @@
 package com.example.study.member.domain
 
+import com.example.study.common.dto.EntityDate
 import jakarta.persistence.*
 import java.time.LocalDate
 
@@ -16,6 +17,9 @@ class Member(
     var password: String,
 
     @Column(nullable = false, length = 10)
+    var nickname: String? = null,
+
+    @Column(nullable = false, length = 10)
     var name: String? = null,
 
     var age: Int? = null,
@@ -27,7 +31,9 @@ class Member(
     @Column(nullable = false, length = 5)
     @Enumerated(EnumType.STRING)
     var gender: Gender? = null
-) {
+)
+
+{
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     var role: List<Role>? = null
 }

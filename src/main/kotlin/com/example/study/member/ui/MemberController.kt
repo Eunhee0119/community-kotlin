@@ -19,7 +19,7 @@ class MemberController(
     @GetMapping("/info")
     fun getMemberInfo(@AuthenticationPrincipal principal: CustomUser): ResponseEntity<MemberResponse?>? {
         val id: Long = principal.userId
-        val member: MemberResponse = memberService.findMember(id)
+        val member: MemberResponse = memberService.findMemberResponse(id)
         return ResponseEntity.ok().body(member)
     }
 

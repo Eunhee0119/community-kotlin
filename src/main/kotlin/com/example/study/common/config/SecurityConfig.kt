@@ -1,4 +1,4 @@
-package com.example.study.config
+package com.example.study.common.config
 
 import com.example.study.auth.token.JwtTokenFilter
 import com.example.study.auth.token.JwtTokenProvider
@@ -51,7 +51,7 @@ class SecurityConfig(
             .authorizeHttpRequests { authorizeHttpRequests ->
                 authorizeHttpRequests
                     .requestMatchers("/index", "/auth/signup", "/auth/signin").anonymous() // Allow public access
-                    .requestMatchers("/members/info").hasRole("MEMBER")
+                    .requestMatchers("/members/info","/post/*").hasRole("MEMBER")
                     .anyRequest().permitAll() // Require authentication for this endpoint
             }
             .exceptionHandling { exceptionHandling ->

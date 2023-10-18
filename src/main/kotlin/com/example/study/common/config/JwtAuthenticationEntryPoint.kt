@@ -1,4 +1,4 @@
-package com.example.study.config
+package com.example.study.common.config
 
 import com.example.study.auth.AuthenticationException
 import jakarta.servlet.http.HttpServletRequest

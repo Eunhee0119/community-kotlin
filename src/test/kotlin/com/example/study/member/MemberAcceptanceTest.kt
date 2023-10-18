@@ -20,6 +20,7 @@ class MemberAcceptanceTest : AcceptanceTest() {
     val EMAIL = "test@email.com"
     val PASSWORD = "password11@@"
     val NAME = "test"
+    val NICKNAME = "테스트계정"
 
     var 로그인토큰: TokenDto? = null
     var ACCESS_TOKEN: String? = null
@@ -27,7 +28,7 @@ class MemberAcceptanceTest : AcceptanceTest() {
 
     @BeforeEach
     fun setting() {
-        회원 = 회원_생성_요청_반환(EMAIL, PASSWORD, NAME)
+        회원 = 회원_생성_요청_반환(EMAIL, PASSWORD, NICKNAME, NAME)
         로그인토큰 = 로그인_토큰(EMAIL, PASSWORD)
         ACCESS_TOKEN = 로그인토큰!!.accessToken
     }
@@ -58,10 +59,11 @@ class MemberAcceptanceTest : AcceptanceTest() {
     fun putMemberInfo() {
         val gender = Gender.WOMAN
         val expected: MemberResponse =
-            MemberResponse(회원!!.id, EMAIL, "${PASSWORD}22", 회원!!.name!!, 30, "1990-01-02", gender.desc)
+            MemberResponse(회원!!.id, EMAIL, "${PASSWORD}22", 회원!!.name!!, NICKNAME,30, "1990-01-02", gender.desc)
         val 회원_정보 = 회원_요청_정보(
             expected.email!!,
             expected.password!!,
+            expected.nickname!!,
             expected.name!!,
             expected.age!!,
             expected.birthDate!!,
