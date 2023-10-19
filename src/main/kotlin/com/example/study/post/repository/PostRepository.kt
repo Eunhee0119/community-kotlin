@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface PostRepository : JpaRepository<Post?, Long?> , PostRepositoryCustom {
-    fun save(post: PostResponse)
+    fun save(post: Post)
 
 }

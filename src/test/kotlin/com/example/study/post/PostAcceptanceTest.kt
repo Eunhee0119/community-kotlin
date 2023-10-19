@@ -14,7 +14,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
 
-
+@DisplayName("게시판 기능 인수테스트")
 class PostAcceptanceTest : AcceptanceTest() {
 
     val EMAIL = "test@email.com"
@@ -89,9 +89,9 @@ class PostAcceptanceTest : AcceptanceTest() {
         assertThat(postResponse.content).isEqualTo(변경후_내용)
     }
 
-    @DisplayName("게시판을 조회한다.")
+    @DisplayName("게시글 목록을 조회한다.")
     @Test
-    fun getBoardPerPage(){
+    fun getBoard(){
 
         var 제목1 = "제목"
         var 내용1 = "게시글 등록 테스트입니다."
@@ -103,4 +103,17 @@ class PostAcceptanceTest : AcceptanceTest() {
 
         PostSteps.게시판_조회(token,1)
     }
+
+    /*@DisplayName("게시판을 조회한다.")
+    @Test
+    fun getBoardPerPage(){
+
+        var 제목 = "제목"
+        var 내용 = "게시글 등록 테스트입니다."
+        for (i in 0..10){
+            게시글_등록 (token, 제목+i, 내용+i)
+        }
+
+        PostSteps.게시판_조회(token,1)
+    }*/
 }

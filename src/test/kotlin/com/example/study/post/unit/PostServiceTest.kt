@@ -4,7 +4,9 @@ import com.example.study.member.domain.Gender
 import com.example.study.member.domain.Member
 import com.example.study.member.unit.fixture.MemberFixture
 import com.example.study.post.application.PostService
+import com.example.study.post.application.dto.PostCondition
 import com.example.study.post.application.dto.PostRequest
+import com.example.study.post.application.dto.PostSimpleDto
 import com.example.study.post.application.dto.PostUpdateRequest
 import com.example.study.post.domain.Post
 import com.example.study.post.repository.PostRepository
@@ -21,6 +23,9 @@ import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.anyVararg
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -144,20 +149,22 @@ class PostServiceTest {
     @Test
     fun getPostList() {
         // given
-        val post = PostFixture.게시글_등록("게시글 제목", "게시글 내용", 회원)
-        given(postRepository!!.findById(post.id!!)).willAnswer { Optional.of(post) }
-
-        // when
-        val title = "게시글 제목 변경"
-        val content = "게시글 내용 변경"
-        val postUpdateRequest = PostUpdateRequest(post.id!!, title, content)
-
-        Assertions.assertThrows(RuntimeException::class.java) {
-            postService!!.updatePost(
-                회원!!.id!! + 1000,
-                postUpdateRequest
-            )
+        val title = "게시글 제목"
+        val totalCount: Long = 10
+        val simplePosts = mutableListOf<PostSimpleDto>()
+        for (i in 0..totalCount) {
+            simplePosts.add(PostSimpleDto(i.toLong(), title + i, 회원!!.nickname))
         }
+        val cond = PostCondition(0, 5)
+        val pageable: Pageable = PageRequest.of(cond.page!!, cond.size!!)
+
+        given(postRepository!!.findAllByCondition(cond)).willAnswer { PageImpl(simplePosts, pageable, totalCount) }
+
+        //when
+        val posts = postService!!.getPostListWithCondition(cond)!!
+
+        //then
+        assertThat(posts.hasNext).isTrue
     }
 
 
